@@ -1,0 +1,18 @@
+=== 0.1.3 2010-09-03
+
+* 1 minor fix, 3 enhancements:
+  * remove comments  from sequence names
+  * FastaQualFile can be used without qual file
+  * added FastaFile
+  * added tests
+  
+=== 0.0.2 2010-05-14
+
+* 1 improvement:
+  * speed improvement in FastaQualFile
+
+=== 0.0.1 2010-05-14
+
+* 1 major enhancement:
+  * Initial release of FastaQualFile
+  
