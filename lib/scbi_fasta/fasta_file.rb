@@ -18,7 +18,8 @@ class FastaFile
 		    @file_name = file_name
 		    @file = File.open(file_name)
 		  else
-		  	raise 'File does not exists'
+		  		raise "File #{file_name} doesn't exists" 
+      	
       end
       
     end
@@ -83,4 +84,9 @@ class FastaFile
     def close
     	@file.close
     end
-  end
+    
+    def with_qual?
+      false
+    end
+    
+end

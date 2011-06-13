@@ -8,5 +8,5 @@ require 'fasta_file'
 
 
 module ScbiFasta
-  VERSION = '0.1.3'
+   VERSION = '0.1.8'
 end

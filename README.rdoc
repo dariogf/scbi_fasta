@@ -1,32 +1,77 @@
 = scbi_fasta
 
-* http://github.com/#{github_username}/#{project_name}
+* http://www.scbi.uma.es/downloads
 
 == DESCRIPTION:
 
-FIX (describe your package)
+scbi_fasta is a ruby gem to read FASTA+QUAL files (DNA/RNA sequences).
+
 
 == FEATURES/PROBLEMS:
 
-* FIX (list of features or problems)
+* Read FASTA files with associated QUAL files
+* Quality values can be automatically splitted
+* Iteration over large files without extra memory usage
+
 
 == SYNOPSIS:
 
-  FIX (code sample of usage)
+=== Reading a FASTA+QUAL with iterator:
+
+  require 'scbi_fasta'
+
+  # open file in sanger mode
+  fqr=FastaQualFile.new('file1.fasta','file1.fasta.qual')
+
+
+  fqr.each do |name,seq_fasta,qual,comments|
+
+    puts name
+    puts seq_fasta
+    puts qual
+    puts comments
+  end
+ 
+  fqr.close
+
+=== Reading a FASTA one sequence at a time:
+
+  require 'scbi_fasta'
+
+  # open file 
+  fqr=FastaQualFile.new('file1.fasta','file1.fasta.qual')
+
+  
+	begin
+	
+    # read one sequence
+    name,seq_fasta,qual,comments=fqr.next_seq
+
+    # name will be nil if there are not more sequences available
+	  if !name.nil?
+      puts name
+      puts seq_fasta
+      puts qual
+      puts comments
+    end
+	end until name.nil?
+
+  fqr.close
+
 
 == REQUIREMENTS:
 
-* FIX (list of requirements)
+* This is a standalone gem.
 
 == INSTALL:
 
-* FIX (sudo gem install, anything else)
+* gem install scbi_fasta
 
 == LICENSE:
 
 (The MIT License)
 
-Copyright (c) 2010 Almudena Bocinos
+Copyright (c) 2010 Almudena Bocinos, Dario Guerrero
 
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the

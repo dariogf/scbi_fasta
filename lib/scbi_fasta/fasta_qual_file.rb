@@ -68,7 +68,7 @@ attr_accessor :num_seqs, :end_fasta
     rewind
 
 	  n,f,q=next_seq
-	  while (!n.nil?)
+    while (!n.nil?)
 	  
 					if @with_qual
 						yield(n,f,q)
@@ -77,7 +77,7 @@ attr_accessor :num_seqs, :end_fasta
 					end
 					
   				n,f,q=next_seq
-		end
+    end
 
   	rewind
   	
@@ -92,7 +92,7 @@ attr_accessor :num_seqs, :end_fasta
      @file_fasta.pos=0
      @end_fasta=false;
 
-		 if @with_qual
+     if @with_qual
 				 @seq_qual_name='';
 				 @file_qual.pos=0
 				 @end_qual=false;   
@@ -109,17 +109,17 @@ attr_accessor :num_seqs, :end_fasta
     res = nil
     
 	  # envia on_process_sequence
-	  if ((!@end_fasta) && (!@with_qual or !@end_qual))
+    if ((!@end_fasta) && (!@with_qual or !@end_qual))
 
 	      name_f,fasta=read_fasta 
   	    
-  	    if @with_qual
+        if @with_qual
 					  
 					  name_q,qual=read_qual 
 					  
-				    if (name_f!=name_q)
+            if (name_f!=name_q)
 							 raise DifferentNamesException.new, "Sequence(<#{name_f}>) and qual(<#{name_q}>) names differs. Sequence will be ignored."
-						else
+             else
 							@num_seqs=@num_seqs+1
 				
 							#storage a string of qualities in an array of qualities
@@ -138,16 +138,20 @@ attr_accessor :num_seqs, :end_fasta
 								 raise DifferentSizesException.new,  "Sequence(<#{name_f}>) and qual(<#{name_q}>) sizes differs (#{fasta.length},#{qual.count(' ')} ). Sequence will be ignored."
 							end 
 						 
-						 end
+            end
 				 
-				 else # without qual				 
+        else # without qual				 
 				 		res =[name_f,fasta]
-				 end
-  	end
+        end
+    end
   	
   	return res
   end
   
+  def with_qual?
+    @with_qual
+  end
+
   
   private 
   
@@ -277,6 +281,8 @@ attr_accessor :num_seqs, :end_fasta
     
     return res
   end  
+  
+  
 
   
 end
