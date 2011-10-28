@@ -39,6 +39,7 @@ attr_accessor :num_seqs, :end_fasta
       @num_seqs = 0 ;      
       
       @seq_name = '';      
+      @seq_comment='';
       @file_fasta = File.open(fasta_file_name) ;
       @end_fasta=false;
       
@@ -67,16 +68,16 @@ attr_accessor :num_seqs, :end_fasta
         
     rewind
 
-	  n,f,q=next_seq
+	  n,f,q,c=next_seq
     while (!n.nil?)
 	  
 					if @with_qual
-						yield(n,f,q)
+						yield(n,f,q,c)
 					else
-					  yield(n,f)
+					  yield(n,f,c)
 					end
 					
-  				n,f,q=next_seq
+  				n,f,q,c=next_seq
     end
 
   	rewind
@@ -89,6 +90,7 @@ attr_accessor :num_seqs, :end_fasta
      @num_seqs = 0 ;      
      
      @seq_name = '';      
+     @seq_comment= '';
      @file_fasta.pos=0
      @end_fasta=false;
 
@@ -111,7 +113,7 @@ attr_accessor :num_seqs, :end_fasta
 	  # envia on_process_sequence
     if ((!@end_fasta) && (!@with_qual or !@end_qual))
 
-	      name_f,fasta=read_fasta 
+	      name_f,fasta,comment=read_fasta 
   	    
         if @with_qual
 					  
@@ -129,9 +131,9 @@ attr_accessor :num_seqs, :end_fasta
 							if fasta.length == qual.count(' ') + 1
 								if @qual_to_array
 									a_qual = qual.strip.split(/\s/).map{|e| e.to_i}
-									res =[name_f,fasta,a_qual]
+									res =[name_f,fasta,a_qual,comment]
 								else
-									res =[name_f,fasta,qual]
+									res =[name_f,fasta,qual,comment]
 								end
 						
 							else #if (!a_qual.empty?)
@@ -141,7 +143,7 @@ attr_accessor :num_seqs, :end_fasta
             end
 				 
         else # without qual				 
-				 		res =[name_f,fasta]
+				 		res =[name_f,fasta,comment]
         end
     end
   	
@@ -179,17 +181,19 @@ attr_accessor :num_seqs, :end_fasta
         if !@seq_name.empty?
           # ya había leido una
           #puts "leida #{@seq_name} + #{@seq_fasta}"
-          res = [@seq_name,seq_fasta]
+          res = [@seq_name,seq_fasta, @seq_comment]
         end
 
 
         #get only name
         line_fasta.gsub!(/^>\s*/,'');
         
-        line_fasta =~ /(^[^\s]+)/
+        # line_fasta =~ /(^[^\s]+)/
+        line_fasta =~ /(^[^\s]+)\s*(.*)$/
         # remove comments
         
         @seq_name = $1
+        @seq_comment = $2
         
         seq_fasta='';
         
@@ -211,7 +215,7 @@ attr_accessor :num_seqs, :end_fasta
     
     #si no hay más secuencias hay que devolver la última, CASO EOF
     if res.nil? and !@seq_name.empty?
-      res= [@seq_name,seq_fasta]
+      res= [@seq_name,seq_fasta, @seq_comment]
     end
     
     return res
