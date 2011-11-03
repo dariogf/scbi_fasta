@@ -34,7 +34,7 @@ attr_accessor :num_seqs, :end_fasta
   		@with_qual = false
       #raise "File #{qual_file_name} doesn't exists" 
   	end
-  
+  # puts "With_qual #{fasta_file_name}?: #{@with_qual}"
   		
       @num_seqs = 0 ;      
       
@@ -68,13 +68,14 @@ attr_accessor :num_seqs, :end_fasta
         
     rewind
 
-	  n,f,q,c=next_seq
+	  n,f,q,c = next_seq
     while (!n.nil?)
 	  
 					if @with_qual
+
 						yield(n,f,q,c)
 					else
-					  yield(n,f,c)
+					  yield(n,f,q)
 					end
 					
   				n,f,q,c=next_seq

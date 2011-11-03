@@ -4,7 +4,7 @@ class TestFastaQualFile < Test::Unit::TestCase
 
 
   def setup
-    @test_file='/tmp/fbinfile';
+    @test_file='/tmp/scbi_fasta';
 
     @seq_fasta='ACTG'
     @seq_qual=[25]
@@ -19,7 +19,7 @@ class TestFastaQualFile < Test::Unit::TestCase
 
     n.times do |c|
       i = c+1
-      name = ">#{@seq_name+i.to_s} comments"
+      name = ">#{@seq_name+i.to_s} comments#{i}"
 
       f.puts(name)
       f.puts(@seq_fasta*i)
@@ -46,13 +46,13 @@ class TestFastaQualFile < Test::Unit::TestCase
 
     100.times do |c|
       i = c+1
-      n,s,q = fqr.next_seq
+      n,s,q,c = fqr.next_seq
 
       #puts n,s.length,q.split(' ').length
-      assert(@seq_name+i.to_s==n)
-      assert(@seq_fasta*i==s)
-      assert((@seq_qual*i*@seq_fasta.length).join(' ')==q)
-
+      assert_equal(@seq_name+i.to_s,n)
+      assert_equal(@seq_fasta*i,s)
+      assert_equal((@seq_qual*i*@seq_fasta.length).join(' '),q)
+      assert_equal('comments'+i.to_s,c)
     end
 
     fqr.close
@@ -74,13 +74,13 @@ class TestFastaQualFile < Test::Unit::TestCase
 
     i=1
 
-    fqr.each do |n,s,q|
+    fqr.each do |n,s,q,c|
 
       #puts n,s.length,q.split(' ').length
-      assert(@seq_name+i.to_s==n)
-      assert(@seq_fasta*i==s)
-      assert((@seq_qual*i*@seq_fasta.length).join(' ')==q)
-
+      assert_equal(@seq_name+i.to_s,n)
+      assert_equal(@seq_fasta*i,s)
+      assert_equal((@seq_qual*i*@seq_fasta.length).join(' '),q)
+      assert_equal('comments'+i.to_s,c)
       i+=1
     end
 
@@ -105,11 +105,12 @@ class TestFastaQualFile < Test::Unit::TestCase
 
     100.times do |c|
       i = c+1
-      n,s,q = fqr.next_seq
+      n,s,c,q = fqr.next_seq
 
-      #puts n,s.length,q.split(' ').length
-      assert(@seq_name+i.to_s==n)
-      assert(@seq_fasta*i==s)
+      # puts n,s.length,q.split(' ').length
+      assert_equal(@seq_name+i.to_s,n)
+      assert_equal(@seq_fasta*i,s)
+      assert_equal('comments'+i.to_s,c)
       assert(q.nil?)
 
     end
@@ -135,12 +136,12 @@ class TestFastaQualFile < Test::Unit::TestCase
 
     i=1
 
-    fqr.each do |n,s,q|
-
+    fqr.each do |n,s,c,q|
+       # puts n,s,q
       #puts n,s.length,q.split(' ').length
-      assert(@seq_name+i.to_s==n)
-      assert(@seq_fasta*i==s)
-
+      assert_equal(@seq_name+i.to_s,n)
+      assert_equal(@seq_fasta*i,s)
+      assert_equal('comments'+i.to_s,c)
       assert(q.nil?)
 
       i+=1
@@ -150,10 +151,10 @@ class TestFastaQualFile < Test::Unit::TestCase
 
     fqr.close
 
-  rescue Exception => e
-    puts "failed in #{n} , #{s}"
-    puts "expected #{@seq_name+i.to_s} , #{@seq_fasta*i==s}"
-    puts e.message, e.backtrace
+  # rescue Exception => e
+  #   puts "failed in #{n} , #{s}"
+  #   puts "expected #{@seq_name+i.to_s} , #{@seq_fasta*i==s}"
+  #   puts e.message, e.backtrace
 
   end
 
